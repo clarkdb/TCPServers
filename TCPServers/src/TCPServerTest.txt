@@ -1,0 +1,1 @@
+This is some sample text to test my TCPServer to ensure that it can find text sent to the server.
