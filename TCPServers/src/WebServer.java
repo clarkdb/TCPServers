@@ -149,7 +149,7 @@ final class HttpRequest implements Runnable {
 public final class WebServer {
 	public static void main(String argv[]) throws Exception {
 		// Get the port number from the command line.
-		int port = 5000;
+		int port = 5010;
 
 		// Establish the listen socket.
 		ServerSocket socket = new ServerSocket(port);
