@@ -5,6 +5,7 @@ import java.util.*;
 final class HttpRequest implements Runnable {
 	final static int BUF_SIZE = 1024000;
 	final static String CRLF = "\r\n";
+
 	byte[] buffer;
 	Socket socket;
 
@@ -62,8 +63,50 @@ final class HttpRequest implements Runnable {
 
 		// Extract the filename from the request line.
 		StringTokenizer tokens = new StringTokenizer(requestLine);
-		String method = tokens.nextToken(); // skip over the method, which
-											// should be "GET"
+		String method = tokens.nextToken(); 
+		
+		
+		
+		if(method.equals("POST")){
+			String line = br.readLine();
+			int totalRead = 0;
+			int boundCount = 0;
+			while(line !=null){
+				
+				if(line.startsWith("------WebKitBoundary") && boundCount == 0){
+					
+					boundCount++;
+					line = br.readLine();
+					totalRead += 2*(line.length());
+					line = br.readLine();
+					totalRead += 2*(line.length());
+					br.readLine();
+					int beginOffset = totalRead;				
+					
+					
+				} else if(line.startsWith("------WebKitBoundary") && boundCount == 1){
+					
+					int endOffset = totalRead;
+					totalRead += 2*(line.length());
+					line = br.readLine();
+					totalRead += 2*(line.length());
+					br.readLine();
+					int fileNameOffset = totalRead;
+					
+					
+				} else {
+					totalRead += 2*(line.length());
+				}
+				
+			}
+			
+			
+		} else if(method.equals("GET")){	
+		}
+		
+		
+		
+		
 		String fileName = tokens.nextToken();
 
 		// Prepend a "." so that file request is within the current directory.
@@ -149,7 +192,7 @@ final class HttpRequest implements Runnable {
 public final class WebServer {
 	public static void main(String argv[]) throws Exception {
 		// Get the port number from the command line.
-		int port = 5010;
+		int port = Integer.parseInt(argv[0]);
 
 		// Establish the listen socket.
 		ServerSocket socket = new ServerSocket(port);
