@@ -16,16 +16,16 @@ public class CompressionServer {
 		    
 		    
 			BufferedInputStream origin = null;
-			FileOutputStream dest = new FileOutputStream(fileOutput);
-			ZipOutputStream out2 = new ZipOutputStream(new BufferedOutputStream(dest));
+			//FileOutputStream dest = new FileOutputStream(fileOutput);
+			//ZipOutputStream out2 = new ZipOutputStream(new BufferedOutputStream(dest));
 			//out.setMethod(ZipOutputStream.DEFLATED);
 			byte data[] = new byte[BUFFER];
 			// get a list of files from current directory
-			System.out.println("Adding: "+ fileInput);
-			FileInputStream fi = new FileInputStream(fileInput);
-			origin = new BufferedInputStream(fi, BUFFER);
-			ZipEntry entry = new ZipEntry(fileInput);
-			out2.putNextEntry(entry);
+			//System.out.println("Adding: "+ fileInput);
+			//FileInputStream fi = new FileInputStream(fileInput);
+			//origin = new BufferedInputStream(fi, BUFFER);
+			//ZipEntry entry = new ZipEntry(fileInput);
+			//out2.putNextEntry(entry);
 			int count;
 			while((count = origin.read(data, 0, 
 					BUFFER)) != -1) {
