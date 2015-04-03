@@ -71,6 +71,9 @@ final class HttpRequest implements Runnable {
 			String line = br.readLine();
 			int totalRead = 0;
 			int boundCount = 0;
+			String fileName2 = "";
+			int beginOffset = 0;
+			int endOffset = 0;
 			while(line !=null){
 				
 				if(line.startsWith("------WebKitBoundary") && boundCount == 0){
@@ -81,28 +84,38 @@ final class HttpRequest implements Runnable {
 					line = br.readLine();
 					totalRead += 2*(line.length());
 					br.readLine();
-					int beginOffset = totalRead;				
+					beginOffset = totalRead;				
 					
 					
 				} else if(line.startsWith("------WebKitBoundary") && boundCount == 1){
 					
-					int endOffset = totalRead;
-					totalRead += 2*(line.length());
+					endOffset = totalRead;
 					line = br.readLine();
-					totalRead += 2*(line.length());
-					br.readLine();
-					int fileNameOffset = totalRead;
-					
-					
+					fileName2 = br.readLine();
+										
 				} else {
 					totalRead += 2*(line.length());
 				}
 				
 			}
 			
+			//put the inputStream at the beginning of the file's contents
+			is.reset();
+			is.skip(beginOffset);
+			
+			//write the file's contents
+			FileOutputStream fos = new FileOutputStream(fileName2);
+			fos.write(buffer, 0, endOffset-beginOffset);
+			String postedMsg = "<HTML>" + "<HEAD><TITLE>Completed</TITLE></HEAD>"
+					+ "<BODY>File uploaded successfully</BODY></HTML>";
+			os.writeBytes(postedMsg);
+			fos.close();
+			
+			
+			
 			
 		} else if(method.equals("GET")){	
-		}
+		
 		
 		
 		
@@ -155,6 +168,7 @@ final class HttpRequest implements Runnable {
 		os.close();
 		br.close();
 		socket.close();
+		}
 	}
 
 	private static void sendBytes(FileInputStream fis, OutputStream os)
